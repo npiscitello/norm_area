@@ -32,6 +32,8 @@ def fillPointList(a, b, mean, sd, num_rects):
 NUM_RECTS_INIT = 1	# init # rectangles: Initial number of rectangles
 NUM_RECTS_SCALE = 1.15	# rect # scale: the multiplier of num_rects each iteration
 ASK_THRESH = 1000000	# user alert threshold: how many rects to check in w/ user
+USAGE = '\nusage: python norm_area.py  A  B  Mean  SD  #DPs  (-i <init'+\
+	' # rectangles> -s <rect # scale> -t <user alert threshold>)\n'
 
 	# handle command line options (flag arguments) for the above constants
 try:
@@ -59,10 +61,10 @@ try:
 
 		elif opt == '-s':
 			try:
-				NUM_RECTS_SCALE = int(arg)
+				NUM_RECTS_SCALE = float(arg)
 
 			except ValueError:
-				raise getopt.GetoptError('Scale value not an int')
+				raise getopt.GetoptError('Scale value not a float')
 
 		elif opt == '-t':
 			try:
@@ -72,8 +74,7 @@ try:
 				raise getopt.GetoptError('Thresh value not an int')
 
 except getopt.GetoptError:	
-	sys.exit('\nusage: python norm_area.py  A  B  Mean  SD  -i <init'+\
-	' # rectangles> -s <rect # scale> -t <user alert threshold>\n')
+	sys.exit(USAGE)
 
 
 
@@ -81,7 +82,7 @@ except getopt.GetoptError:
 
 	# test that there are the right number of non-flag arguments
 if len(sys.argv) < 6:
-	sys.exit('\n5 Arguments Required! Format: A  B  Mean  SD  #DPs\n')
+	sys.exit(USAGE)
 
 	# test that the non-flag arguments are of the correct types
 try:
@@ -97,7 +98,7 @@ try:
 	sd = float(sys.argv[4])
 	dec_pts = int(sys.argv[5]);
 except ValueError:
-	sys.exit('\nArguments must be numbers! Format: A  B  Mean  SD  #DPs\n')
+	sys.exit(USAGE)
 
 
 
@@ -143,3 +144,4 @@ while True:
 	# output final sum
 print '\nAn approximation using', num_rects, 'rectangles yields a sum of',\
 	('{:.' + str(dec_pts) + 'f}').format(round(right, dec_pts)), '\n'
+sys.exit()
